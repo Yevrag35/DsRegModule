@@ -21,23 +21,41 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assemblies\System.Management.Automation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="BaseDetail.cs" />
+    <Compile Include="Objects\DeviceDetails.cs" />
+    <Compile Include="Objects\DeviceState.cs" />
+    <Compile Include="DsRegArgument.cs" />
+    <Compile Include="DsRegExecutor.cs" />
+    <Compile Include="DsRegParser.cs" />
+    <Compile Include="IDsRegExecutor.cs" />
+    <Compile Include="IDsRegParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Objects\TenantDetails.cs" />
+    <Compile Include="Objects\UserState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assemblies\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
