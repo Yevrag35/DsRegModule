@@ -7,8 +7,8 @@
     <ProjectGuid>{74436D80-8C83-4581-9435-F5E91310E81E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MG.PowerShell.DsReg</RootNamespace>
-    <AssemblyName>MG.PowerShell.DsReg</AssemblyName>
+    <RootNamespace>MG.DsReg</RootNamespace>
+    <AssemblyName>MG.DsReg</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,29 +33,37 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\System.Management.Automation.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseDetail.cs" />
+    <Compile Include="Interfaces\IJsonOutputter.cs" />
+    <Compile Include="Objects\BaseDetail.cs" />
+    <Compile Include="DsRegResult.cs" />
+    <Compile Include="Interfaces\IDsRegResult.cs" />
+    <Compile Include="MatchDetail.cs" />
+    <Compile Include="MatchDetailCollection.cs" />
     <Compile Include="Objects\DeviceDetails.cs" />
     <Compile Include="Objects\DeviceState.cs" />
     <Compile Include="DsRegArgument.cs" />
     <Compile Include="DsRegExecutor.cs" />
     <Compile Include="DsRegParser.cs" />
-    <Compile Include="IDsRegExecutor.cs" />
-    <Compile Include="IDsRegParser.cs" />
+    <Compile Include="Interfaces\IDsRegExecutor.cs" />
+    <Compile Include="Objects\DiagnosticData.cs" />
+    <Compile Include="Objects\SSOState.cs" />
+    <Compile Include="Objects\NgcPrerequisiteCheck.cs" />
+    <Compile Include="Objects\WorkAccount.cs" />
+    <Compile Include="Objects\WorkAccountCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\TenantDetails.cs" />
     <Compile Include="Objects\UserState.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assemblies\" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace MG.PowerShell.DsReg
+namespace MG.DsReg
 {
     public class DeviceState : BaseDetail
     {
-        public bool? DomainJoined { get; set; }
         public bool? AzureADJoined { get; set; }
+        public bool? DomainJoined { get; set; }
+        public string DomainName { get; set; }
         public bool? EnterpriseJoined { get; set; }
 
         public DeviceState() { }

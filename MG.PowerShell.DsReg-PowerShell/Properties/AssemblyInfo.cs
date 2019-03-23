@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MG.PowerShell.DsReg")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Yevrag35, LLC.")]
 [assembly: AssemblyProduct("MG.PowerShell.DsReg")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright © 2019 Yevrag35, LLC.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("74436d80-8c83-4581-9435-f5e91310e81e")]
+[assembly: Guid("59fa6f49-c2f8-4ba6-baa7-ba84654d216f")]
 
 // Version information for an assembly consists of the following four values:
 //

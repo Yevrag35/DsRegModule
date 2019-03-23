@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Text.RegularExpressions;
 
-namespace MG.PowerShell.DsReg
+namespace MG.DsReg
 {
-    public abstract class BaseDetail
+    public abstract class BaseDetail : IJsonOutputter
     {
-        private const string REGEX_MULTI = @"^\[\s{1,}(.{1,})\s{1,}UTC\s{1,}\-\-\s{1,}(.{1,})\s{1,}UTC\s{1,}\]$";
-        private const string REGEX_SINGLE = @"^(.{1,})\s{1,}UTC$";
+        private const string REGEX_MULTI = @"^\s{0,1}\[\s{1,}(.{1,})\s{1,}UTC\s{1,}\-\-\s{1,}(.{1,})\s{1,}UTC\s{1,}\]$";
+        private const string REGEX_SINGLE = @"^\s{0,1}(.{1,})\s{1,}UTC$";
 
         public DateTime? ConvertTime(string input, int groupNo)
         {
@@ -38,6 +38,21 @@ namespace MG.PowerShell.DsReg
                 dtVal = utcDt;
             }
             return dtVal;
+        }
+
+        public string ToJson(Formatting asFormat, bool includeTypes)
+        {
+            var serializer = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                NullValueHandling = NullValueHandling.Include,
+                ObjectCreationHandling = ObjectCreationHandling.Replace
+            };
+            if (includeTypes)
+                serializer.TypeNameHandling = TypeNameHandling.Objects;
+
+            string jsonStr = JsonConvert.SerializeObject(this, asFormat, serializer);
+            return jsonStr;
         }
     }
 }

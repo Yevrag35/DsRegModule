@@ -5,21 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace MG.PowerShell.DsReg
+namespace MG.DsReg
 {
     public class DsRegExecutor : IDsRegExecutor
     {
         private const string DSREG_EXE = "dsregcmd.exe";
-        private readonly IDsRegParser _parser;
 
-        IDsRegParser IDsRegExecutor.Parser => _parser;
         public string DsRegExe { get; }
 
-        public DsRegExecutor()
-        {
-            DsRegExe = this.GetExePath();
-            _parser = new DsRegParser();
-        }
+        private DsRegExecutor() => DsRegExe = this.GetExePath();
 
         private string GetExePath()
         {
@@ -40,7 +34,7 @@ namespace MG.PowerShell.DsReg
             };
         }
 
-        private string[] GetStatus()
+        private IDsRegResult GetStatus()
         {
             var output = new List<string>();
             ProcessStartInfo psi = this.NewProcessInfo(DsRegArgument.Status);
@@ -54,40 +48,22 @@ namespace MG.PowerShell.DsReg
                 {
                     output.Add(proc.StandardOutput.ReadLine());
                 }
-                var errLine = proc.StandardError.ReadToEnd();
+                string errLine = proc.StandardError.ReadToEnd();
                 if (!string.IsNullOrEmpty(errLine))
                 {
                     throw new Exception(errLine);
                 }
 
-                return output.ToArray();
+                return new DsRegResult(output);
             }
         }
 
-        private BaseDetail FilterInto(IEnumerable<BaseDetail> objs, Type type)
+        IDsRegResult IDsRegExecutor.GetStatus()
         {
-            BaseDetail retVal = null;
-            foreach (BaseDetail o in objs)
-            {
-                if (o.GetType().Equals(type))
-                {
-                    retVal = o;
-                }
-            }
-            return retVal;
+            IDsRegResult allLines = this.GetStatus();
+            return allLines;
         }
 
-        IEnumerable<BaseDetail> IDsRegExecutor.GetAllStatus()
-        {
-            string[] allLines = this.GetStatus();
-            IEnumerable<BaseDetail> retObjs = _parser.ParseFrom(allLines);
-            return retObjs;
-        }
-
-        BaseDetail IDsRegExecutor.GetSpecific(Type type)
-        {
-            IEnumerable<BaseDetail> allObjs = ((IDsRegExecutor)this).GetAllStatus();
-            return this.FilterInto(allObjs, type);
-        }
+        public static IDsRegExecutor NewExecutor() => new DsRegExecutor();
     }
 }

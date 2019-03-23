@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MG.PowerShell.DsReg
+namespace MG.DsReg
 {
     public class UserState : BaseDetail
     {

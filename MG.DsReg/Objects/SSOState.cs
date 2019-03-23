@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MG.PowerShell.DsReg
+namespace MG.DsReg
 {
-    public class SsoState : BaseDetail
+    public class SSOState : BaseDetail
     {
         internal string azureAdPrtUpdateTime { get; set; }
         internal string azureadprtExpiryTime { get; set; }
@@ -14,6 +14,6 @@ namespace MG.PowerShell.DsReg
         public bool? EnterprisePrt { get; set; }
         public string EnterprisePrtAuthority { get; set; }
 
-        public SsoState() { }
+        public SSOState() { }
     }
 }
