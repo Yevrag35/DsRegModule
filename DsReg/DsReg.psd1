@@ -101,7 +101,7 @@ PrivateData = @{
         # LicenseUri = ''
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://git.yevrag35.com/gityev/dsregcmdlets.git'
+        ProjectUri = 'https://github.com/Yevrag35/DsRegModule'
 
         # A URL to an icon representing this module.
         # IconUri = ''
