@@ -10,7 +10,7 @@ namespace MG.DsReg
         private const string REGEX_MULTI = @"^\s{0,1}\[\s{1,}(.{1,})\s{1,}UTC\s{1,}\-\-\s{1,}(.{1,})\s{1,}UTC\s{1,}\]$";
         private const string REGEX_SINGLE = @"^\s{0,1}(.{1,})\s{1,}UTC$";
 
-        public DateTime? ConvertTime(string input, int groupNo)
+        protected private DateTime? ConvertTime(string input, int groupNo)
         {
             if (string.IsNullOrEmpty(input))
                 return null;
@@ -25,7 +25,7 @@ namespace MG.DsReg
             return dtVal;
         }
 
-        public DateTime? ConvertTime(string input)
+        protected private DateTime? ConvertTime(string input)
         {
             if (string.IsNullOrEmpty(input))
                 return null;
@@ -40,7 +40,7 @@ namespace MG.DsReg
             return dtVal;
         }
 
-        public string ToJson(Formatting asFormat, bool includeTypes)
+        string IJsonOutputter.ToJson(Formatting asFormat, bool includeTypes)
         {
             var serializer = new JsonSerializerSettings
             {

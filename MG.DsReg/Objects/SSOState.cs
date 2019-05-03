@@ -8,9 +8,9 @@ namespace MG.DsReg
         internal string azureadprtExpiryTime { get; set; }
 
         public bool? AzureAdPrt { get; set; }
-        public DateTime? AzureAdPrtUpdateTime => base.ConvertTime(azureAdPrtUpdateTime);
-        public DateTime? AzureAdPrtExpiryTime => base.ConvertTime(azureadprtExpiryTime);
         public string AzureAdPrtAuthority { get; set; }
+        public DateTime? AzureAdPrtExpiryTime => base.ConvertTime(azureadprtExpiryTime);
+        public DateTime? AzureAdPrtUpdateTime => base.ConvertTime(azureAdPrtUpdateTime);
         public bool? EnterprisePrt { get; set; }
         public string EnterprisePrtAuthority { get; set; }
 
