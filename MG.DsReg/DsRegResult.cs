@@ -29,20 +29,20 @@ namespace MG.DsReg
 
         int IDsRegResult.LineCount => strs.Count;
 
-        private DsRegParser Parser { get; set; }
+        //private DsRegParser Parser { get; set; }
 
         internal DsRegResult(IEnumerable<string> allLines)
         {
             strs = new List<string>(allLines);
             _was = new WorkAccountCollection();
-            this.Parser = new DsRegParser();
+            //this.Parser = new DsRegParser();
             this.PopulateClasses();
         }
 
-        IEnumerable<string> IDsRegResult.GetClasses() => this.Parser.ParseIntoClasses(strs);
+        IEnumerable<string> IDsRegResult.GetClasses() => DsRegParser.ParseIntoClasses(strs);
         private void PopulateClasses()
         {
-            IEnumerable<BaseDetail> bds = this.Parser.ParseFrom(strs);
+            IEnumerable<BaseDetail> bds = DsRegParser.ParseFrom(strs);
             foreach (BaseDetail bd in bds)
             {
                 if (bd is DeviceDetails dd)

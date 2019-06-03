@@ -7,16 +7,25 @@ using System.Text.RegularExpressions;
 
 namespace MG.DsReg
 {
-    internal class DsRegParser
+    public class DsRegParser
     {
         private const string REGEX = @"^\s{1,}(.{1,})\s\:(.{1,}|$)$";
         private const string CLASS_REGEX = @"^\|\s{1,}(\S{1,}\s\S{1,}(?:\s\S{1,}|\s))";
 
         internal DsRegParser() { }
 
-        internal IEnumerable<BaseDetail> ParseFrom(IEnumerable<string> allLines)
+        //public static Dictionary<string, BaseDetail> ParseFromOneLineText(string text)
+        //{
+        //    string[] allLines = text.Split(new string[1] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+        //    return ParseFromText(allLines);
+        //}
+        //public static Dictionary<string, BaseDetail> ParseFromText(IEnumerable<string> text) => ParseFrom(text);
+
+        public static IDsRegResult ParseFromText(IEnumerable<string> allLines) => new DsRegResult(allLines);
+
+        internal static IEnumerable<BaseDetail> ParseFrom(IEnumerable<string> allLines)
         {
-            IEnumerable<string> classes = this.ParseIntoClasses(allLines);
+            IEnumerable<string> classes = ParseIntoClasses(allLines);
 
             var list = new List<BaseDetail>();
             string allOne = string.Join(Environment.NewLine, allLines);
@@ -26,17 +35,17 @@ namespace MG.DsReg
                 if (t != null)
                 {
                     var newObj = Activator.CreateInstance(t) as BaseDetail;
-                    list.Add(this.MatchTo(newObj, allOne));
+                    list.Add(MatchTo(newObj, allOne));
                 }
             }
             int count = classes.Count(x => x.Contains("WorkAccount"));
             if (count > 0)
-                list.AddRange(this.MatchToWorkAccounts(allOne, count));
+                list.AddRange(MatchToWorkAccounts(allOne, count));
 
             return list;
         }
 
-        internal IEnumerable<string>ParseIntoClasses(IEnumerable<string> lines)
+        internal static IEnumerable<string> ParseIntoClasses(IEnumerable<string> lines)
         {
             string allOne = string.Join(Environment.NewLine, lines);
             var classes = new List<string>();
@@ -48,7 +57,7 @@ namespace MG.DsReg
             return classes;
         }
 
-        private MatchDetailCollection MatchToKeyValuePairs(string allLines, Type matchTo)
+        private static MatchDetailCollection MatchToKeyValuePairs(string allLines, Type matchTo)
         {
             var allProps = matchTo.GetProperties(
                 BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).Where(
@@ -75,9 +84,9 @@ namespace MG.DsReg
             return dict;
         }
 
-        private BaseDetail MatchTo(BaseDetail newObj, string allLines)
+        private static BaseDetail MatchTo(BaseDetail newObj, string allLines)
         {
-            MatchDetailCollection dict = this.MatchToKeyValuePairs(allLines, newObj.GetType());
+            MatchDetailCollection dict = MatchToKeyValuePairs(allLines, newObj.GetType());
 
             for (int i = 0; i < dict.Count; i++)
             {
@@ -87,10 +96,10 @@ namespace MG.DsReg
             return newObj;
         }
 
-        private WorkAccountCollection MatchToWorkAccounts(string allOne, int howMany)
+        private static WorkAccountCollection MatchToWorkAccounts(string allOne, int howMany)
         {
             var list = new WorkAccountCollection(howMany);
-            MatchDetailCollection matchDets = this.MatchToKeyValuePairs(allOne, typeof(WorkAccount));
+            MatchDetailCollection matchDets = MatchToKeyValuePairs(allOne, typeof(WorkAccount));
             var listOfMatches = new List<MatchDetailCollection>(howMany);
             
             for (int i = 0; i < howMany; i++)
