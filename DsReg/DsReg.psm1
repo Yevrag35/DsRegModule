@@ -41,8 +41,13 @@
         if ($PSBoundParameters.ContainsKey("ComputerName"))
         {
             $Session = New-PSSession -ComputerName $ComputerName -ErrorAction Stop;
+            $removeAfter = $true;
         }
         $status = Get-RemoteDsRegStatus -Session $Session @dsArgs;
+        if ($removeAfter)
+        {
+            $Session | Remove-PSSession;
+        }
     }
     else
     {
@@ -111,12 +116,13 @@ Function Get-RemoteDsRegStatus()
     $psObj = Invoke-Command -Session $Session -ScriptBlock {
         [string[]]$status = & dsregcmd.exe /status;
         return [pscustomobject]@{
-            Result = $status
+            Text = $status
         };
     }
-    if (-not [string]::IsNullOrEmpty($psObj.Text))
+    if ($null -ne $psObj.Text)
     {
-        $details = [MG.DsReg.DsRegParser]::ParseFromText($psObj.Text);
+        [string[]]$text = $psObj.Text;
+        $details = [MG.DsReg.DsRegParser]::ParseFromText($text);
         if ($null -ne $details)
         {
             if (-not [string]::IsNullOrEmpty($Display))
@@ -152,5 +158,6 @@ Function Get-RemoteDsRegStatus()
                 }
             }
         }
+        Write-Output -InputObject $object;
     }
 }

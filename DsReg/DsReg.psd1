@@ -12,7 +12,7 @@
 # RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '1.0.0'
+ModuleVersion = '1.1.0'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop')
@@ -87,7 +87,12 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-# FileList = @()
+FileList = @(
+	'DsReg.psd1',
+	'DsReg.psm1',
+	'MG.DsReg.dll',
+	'Newtonsoft.Json.dll'
+)
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
@@ -95,7 +100,8 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('dsreg', 'dsregcmd', 'exe', 'Azure', 'AD', 'Tenant', 'Details', 'SSO', 'Certificate', 'ID', 'State', 'Device', 'Intune', 'Authority')
+        Tags = @('dsreg', 'dsregcmd', 'exe', 'Azure', 'AD', 'Tenant', 'Details', 'SSO', 'Certificate', 'ID', 'State', 'Device', 'Intune', 'Authority'
+			'remote', 'pssession', 'computername')
 
         # A URL to the license for this module.
         # LicenseUri = ''
@@ -107,7 +113,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = 'Introduces new remote functionality.  Get-DsRegStatus now has ''-ComputerName'' and ''-Session'' parameters available.'
 
     } # End of PSData hashtable
 
