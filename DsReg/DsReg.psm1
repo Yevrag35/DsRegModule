@@ -34,7 +34,7 @@
     };
     if ($PSBoundParameters.ContainsKey("Display"))
     {
-        $remArgs.Display = $Display;
+        $dsArgs.Display = $Display;
     }
     if ($PSCmdlet.ParameterSetName.Contains("RemoteQuery"))
     {
