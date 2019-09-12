@@ -13,7 +13,7 @@
                             <ListItem>
                                 <Label>DeviceDetails</Label>
                                 <ScriptBlock>
-                                    "{ DeviceId = $($_.DeviceDetails.DeviceId) }"
+                                    "{ DeviceId = $($_.DeviceDetails.DeviceId) ... }"
                                 </ScriptBlock>
                             </ListItem>
                             <ListItem>
