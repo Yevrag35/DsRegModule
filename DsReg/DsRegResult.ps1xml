@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="uft-8"?>
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>DsRegStatus List View</Name>
+            <ViewSelectedBy>
+                <TypeName>MG.DsReg.DsRegResult</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>DeviceDetails</Label>
+                                <ScriptBlock>
+                                    "{ DeviceId = $($_.DeviceDetails.DeviceId) }"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>DeviceState</Label>
+                                <ScriptBlock>
+                                    "{ AzureADJoined = $($_.DeviceState.AzureADJoined); EnterpriseJoined = $($_.DeviceState.EnterpriseJoined); DomainJoined = $($_.DeviceState.DomainJoined) ... }"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>DiagnosticData</Label>
+                                <ScriptBlock>
+                                    "{ KeySignTest = $($_.DiagnosticData.KeySignTest); AadRecoveryNeeded = $($_.DiagnosticData.AadRecoveryNeeded) }"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>NgcPrerequisiteCheck</Label>
+                                <ScriptBlock>
+                                    "{ DeviceEligible = $($_.NgcPrerequisiteCheck.DeviceEligible); IsDeviceJoined = $($_.NgcPrerequisiteCheck.IsDeviceJoined); PolicyEnabled = $($_.NgcPrerequisiteCheck.PolicyEnabled) ... }"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>SsoState</Label>
+                                <ScriptBlock>
+                                    "{ AzureAdPrtAuthority = $($_.SsoState.AzureAdPrtAuthority); ... }"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>TenantDetails</Label>
+                                <ScriptBlock>
+                                    "{ TenantId = $($_.TenantDetails.TenantId); TenantName = $($_.TenantDetails.TenantName); ... }"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>UserState</Label>
+                                <ScriptBlock>
+                                    "{ WorkplaceJoined = $($_.UserState.WorkplaceJoined); NgcSet = $($_.UserState.NgcSet); ... }"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>WorkAccounts</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>
