@@ -1,33 +1,49 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MG.DsReg
 {
-    public class WorkAccountCollection : List<WorkAccount>, IJsonOutputter
+    [Serializable]
+    public class WorkAccountCollection : IEnumerable<WorkAccount>, IJsonOutputter
     {
-        public WorkAccountCollection() : base() { }
-        public WorkAccountCollection(IEnumerable<WorkAccount> accounts)
-            : base(accounts) { }
+        private List<WorkAccount> _list;
 
-        public WorkAccountCollection(int capacity)
-            : base(capacity) { }
+        public WorkAccount this[int index] => _list[index];
 
-        string IJsonOutputter.ToJson(Formatting asFormat, bool includeType)
+        public int Count => _list.Count;
+
+        public WorkAccountCollection() => _list = new List<WorkAccount>();
+        public WorkAccountCollection(int capacity) => _list = new List<WorkAccount>(capacity);
+
+        internal void Add(WorkAccount wa) => _list.Add(wa);
+
+        public IEnumerator<WorkAccount> GetEnumerator() => ((IEnumerable<WorkAccount>)_list).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<WorkAccount>)_list).GetEnumerator();
+
+        public string ToJson()
         {
             var serializer = new JsonSerializerSettings
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Include,
-                ObjectCreationHandling = ObjectCreationHandling.Replace
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                FloatParseHandling = FloatParseHandling.Decimal,
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Include
             };
-            if (includeType)
-                serializer.TypeNameHandling = TypeNameHandling.Objects;
+            serializer.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
+            return this.ToJson(serializer);
+        }
 
-            string jsonStr = JsonConvert.SerializeObject(this, asFormat, serializer);
-            return jsonStr;
+        public string ToJson(JsonSerializerSettings serializerSettings)
+        {
+            return JsonConvert.SerializeObject(this, serializerSettings);
         }
     }
 }

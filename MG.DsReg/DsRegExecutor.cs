@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 
 namespace MG.DsReg
 {
-    public class DsRegExecutor : IDsRegExecutor
+    public class DsRegExecutor
     {
         private const string DSREG_EXE = "dsregcmd.exe";
 
         public string DsRegExe { get; }
 
-        private DsRegExecutor() => DsRegExe = this.GetExePath();
+        public DsRegExecutor() => DsRegExe = this.GetExePath();
 
         private string GetExePath()
         {
@@ -34,7 +34,7 @@ namespace MG.DsReg
             };
         }
 
-        private IDsRegResult GetStatus()
+        public DsRegResult GetStatus()
         {
             var output = new List<string>();
             ProcessStartInfo psi = this.NewProcessInfo(DsRegArgument.Status);
@@ -58,12 +58,12 @@ namespace MG.DsReg
             }
         }
 
-        IDsRegResult IDsRegExecutor.GetStatus()
-        {
-            IDsRegResult allLines = this.GetStatus();
-            return allLines;
-        }
+        //public DsRegResult GetStatus()
+        //{
+        //    DsRegResult allLines = this.GetStatus();
+        //    return allLines;
+        //}
 
-        public static IDsRegExecutor NewExecutor() => new DsRegExecutor();
+        //public static DsRegExecutor NewExecutor() => new DsRegExecutor();
     }
 }

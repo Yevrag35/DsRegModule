@@ -1,7 +1,7 @@
 ﻿Function Get-DsRegStatus()
 {
     [CmdletBinding(PositionalBinding=$false, DefaultParameterSetName='None')]
-    [OutputType([MG.DsReg.IDsRegResult])]
+    [OutputType([MG.DsReg.DsRegResult])]
     param
     (
         [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQuery')]
@@ -53,7 +53,7 @@
     {
         $status = Get-LocalDsRegStatus @dsArgs;
     }
-    Write-Output -InputObject $status -NoEnumerate;
+    $status
 }
 
 Function Get-LocalDsRegStatus()
@@ -65,22 +65,22 @@ Function Get-LocalDsRegStatus()
         [bool] $AsJson,
         [bool] $Expanded
     )
-    $executor = [MG.DsReg.DsRegExecutor]::NewExecutor();
+    $executor = New-Object -TypeName "MG.DsReg.DsRegExecutor"
     $cmdResult = $executor.GetStatus();
     if (-not [string]::IsNullOrEmpty($Display))
     {
         $object = $cmdResult.$Display;
         if ($AsJson)
         {
-            $object = $object.ToJson("Indented", $false);
+            $object = $object.ToJson()
         }
     }
     else
     {
         if ($AsJson)
         {
-            $object = $cmdResult;
-            $object = $object | ConvertTo-Json -Depth 100;
+            $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult);
+            $object = $object.ToJson()
         }
         elseif ($Expanded)
         {
@@ -96,11 +96,11 @@ Function Get-LocalDsRegStatus()
         }
         else
         {
-            $object = $cmdResult;
+            $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult);
         }
     }
 
-    Write-Output -InputObject $object -NoEnumerate;
+    , $object
 }
 
 Function Get-RemoteDsRegStatus()
@@ -158,6 +158,6 @@ Function Get-RemoteDsRegStatus()
                 }
             }
         }
-        Write-Output -InputObject $object;
+        $object
     }
 }

@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="uft-8"?>
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>DsRegStatus PowerShell List View</Name>
+            <ViewSelectedBy>
+                <TypeName>MG.DsReg.DsRegPoshResult</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <PropertyName>AzureADJoined</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>AzureTenantId</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>AzureTenantName</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>DeviceId</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>AdfsEnterpriseJoined</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>HybridAzureADJoined</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>DomainJoined</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>DomainName</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>DeviceCertificateThumbprint</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>DeviceCertificateValidityStart</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>DeviceCertificateValidityEnd</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>DeviceTpmProtected</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>DiagnosticDetails</Label>
+                                <ScriptBlock>
+                                    if ($_.DiagnosticDetails -ne $null)
+                                    {
+                                        "{ KeySignTest = $($_.DiagnosticDetails.KeySignTest); AadRecoveryEnabled = $($_.DiagnosticDetails.AadRecoveryEnabled) }"
+                                    }
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>KeyContainerId</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>NgcPrerequisiteCheck</Label>
+                                <ScriptBlock>
+                                    if ($_.NgcPrerequisiteCheck -ne $null)
+                                    {
+                                        "{ CertEnrollment = $($_.NgcPrerequisiteCheck.CertEnrollment); PreReqResult = $($_.NgcPrerequisiteCheck.PreReqResult); ... }"
+                                    }
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>SsoState</Label>
+                                <ScriptBlock>
+                                    if ($_.SsoState -ne $null -and $_.SsoState.AzureAdPrimaryRefreshToken -ne $null)
+                                    {
+                                        "{ AzureAdPrimaryRefreshToken = $($_.SsoState.AzureAdPrimaryRefreshToken); ... }"
+                                    }
+                                    else
+                                    {
+                                        "{ ... }"
+                                    }
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>WorkAccounts</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

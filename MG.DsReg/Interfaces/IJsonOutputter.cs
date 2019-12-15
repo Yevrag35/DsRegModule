@@ -5,6 +5,7 @@ namespace MG.DsReg
 {
     public interface IJsonOutputter
     {
-        string ToJson(Formatting asFormat, bool includeType);
+        string ToJson();
+        string ToJson(JsonSerializerSettings serializerSettings);
     }
 }

@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace MG.DsReg
 {
+    [Serializable]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class DeviceState : BaseDetail
     {
-        public bool? AzureADJoined { get; set; }
-        public bool? DomainJoined { get; set; }
+        [JsonProperty("azureADJoined")]
+        public bool AzureADJoined { get; set; }
+
+        [JsonProperty("domainJoined")]
+        public bool DomainJoined { get; set; }
+
+        [JsonProperty("domainName")]
         public string DomainName { get; set; }
-        public bool? EnterpriseJoined { get; set; }
+
+        [JsonProperty("enterpriseJoined")]
+        public bool EnterpriseJoined { get; set; }
 
         public DeviceState() { }
     }

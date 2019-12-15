@@ -1,93 +1,96 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MG.DsReg
 {
-    internal class DsRegResult : IDsRegResult
+    [Serializable]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    public class DsRegResult : BaseDetail
     {
-        private List<string> strs;
-        private WorkAccountCollection _was;
-        private DeviceDetails _dd;
-        private DeviceState _ds;
-        private DiagnosticData _diag;
-        private NgcPrerequisiteCheck _npc;
-        private TenantDetails _td;
-        private SSOState _sso;
-        private UserState _us;
+        #region FIELDS/CONSTANTS
+        private string[] _dsRegLines;
 
-        DeviceDetails IDsRegResult.DeviceDetails => _dd;
-        DeviceState IDsRegResult.DeviceState => _ds;
-        DiagnosticData IDsRegResult.DiagnosticData => _diag;
-        NgcPrerequisiteCheck IDsRegResult.NgcPrerequisiteCheck => _npc;
-        SSOState IDsRegResult.SsoState => _sso;
-        TenantDetails IDsRegResult.TenantDetails => _td;
-        UserState IDsRegResult.UserState => _us;
-        WorkAccountCollection IDsRegResult.WorkAccounts => _was;
+        #endregion
 
-        int IDsRegResult.LineCount => strs.Count;
+        #region PROPERTIES
+        [JsonProperty("deviceDetails")]
+        public DeviceDetails DeviceDetails { get; private set; }
 
-        //private DsRegParser Parser { get; set; }
+        [JsonProperty("deviceState")]
+        public DeviceState DeviceState { get; private set; }
 
-        internal DsRegResult(IEnumerable<string> allLines)
+        [JsonProperty("diagnosticData")]
+        public DiagnosticData DiagnosticData { get; private set; }
+
+        [JsonProperty("ngcPrerequisiteCheck")]
+        public NgcPrerequisiteCheck NgcPrerequisiteCheck { get; private set; }
+
+        [JsonProperty("ssoState")]
+        public SSOState SsoState { get; private set; }
+
+        [JsonProperty("tenantDetails")]
+        public TenantDetails TenantDetails { get; private set; }
+
+        [JsonProperty("userState")]
+        public UserState UserState { get; private set; }
+
+        [JsonProperty("workAccounts")]
+        public WorkAccountCollection WorkAccounts { get; } = new WorkAccountCollection();
+
+        #endregion
+
+        #region CONSTRUCTORS
+        public DsRegResult(IEnumerable<string> allLines)
         {
-            strs = new List<string>(allLines);
-            _was = new WorkAccountCollection();
-            //this.Parser = new DsRegParser();
+            if (allLines is string[] strArr)
+                _dsRegLines = strArr;
+
+            else
+                _dsRegLines = allLines.ToArray();
+
             this.PopulateClasses();
         }
 
-        IEnumerable<string> IDsRegResult.GetClasses() => DsRegParser.ParseIntoClasses(strs);
+        #endregion
+
+        #region PUBLIC METHODS
+
+
+        #endregion
+
+        #region BACKEND/PRIVATE METHODS
         private void PopulateClasses()
         {
-            IEnumerable<BaseDetail> bds = DsRegParser.ParseFrom(strs);
-            foreach (BaseDetail bd in bds)
+            foreach (BaseDetail bd in DsRegParser.ParseFrom(_dsRegLines))
             {
                 if (bd is DeviceDetails dd)
-                    _dd = dd;
+                    this.DeviceDetails = dd;
 
                 else if (bd is DeviceState ds)
-                    _ds = ds;
+                    this.DeviceState = ds;
 
                 else if (bd is DiagnosticData diag)
-                    _diag = diag;
+                    this.DiagnosticData = diag;
 
                 else if (bd is NgcPrerequisiteCheck npc)
-                    _npc = npc;
+                    this.NgcPrerequisiteCheck = npc;
 
                 else if (bd is SSOState sso)
-                    _sso = sso;
+                    this.SsoState = sso;
 
                 else if (bd is TenantDetails td)
-                    _td = td;
+                    this.TenantDetails = td;
 
                 else if (bd is UserState us)
-                    _us = us;
+                    this.UserState = us;
 
                 else if (bd is WorkAccount wa)
-                    _was.Add(wa);
+                    this.WorkAccounts.Add(wa);
             }
         }
 
-        string IJsonOutputter.ToJson(Formatting asFormat, bool includeTypes)
-        {
-            var serializer = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Include,
-                ObjectCreationHandling = ObjectCreationHandling.Reuse
-            };
-            if (includeTypes)
-                serializer.TypeNameHandling = TypeNameHandling.Objects;
-
-            string jsonStr = JsonConvert.SerializeObject(this, asFormat, serializer);
-            return jsonStr;
-        }
-
-        public override string ToString() => string.Join(Environment.NewLine, strs);
-
-        string[] IDsRegResult.ToArray() => strs.ToArray();
+        #endregion
     }
 }

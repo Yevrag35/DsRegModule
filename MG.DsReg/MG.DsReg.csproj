@@ -41,10 +41,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IJsonOutputter.cs" />
-    <Compile Include="Objects\BaseDetail.cs" />
     <Compile Include="DsRegResult.cs" />
-    <Compile Include="Interfaces\IDsRegResult.cs" />
+    <Compile Include="Interfaces\IJsonOutputter.cs" />
+    <Compile Include="JsonMapping.cs" />
+    <Compile Include="Objects\BaseDetail.cs" />
+    <None Include="DsRegResultOld.cs" />
+    <None Include="Interfaces\IDsRegResult.cs" />
     <Compile Include="MatchDetail.cs" />
     <Compile Include="MatchDetailCollection.cs" />
     <Compile Include="Objects\DeviceDetails.cs" />
@@ -52,8 +54,9 @@
     <Compile Include="DsRegArgument.cs" />
     <Compile Include="DsRegExecutor.cs" />
     <Compile Include="DsRegParser.cs" />
-    <Compile Include="Interfaces\IDsRegExecutor.cs" />
+    <None Include="Interfaces\IDsRegExecutor.cs" />
     <Compile Include="Objects\DiagnosticData.cs" />
+    <Compile Include="Objects\DsRegPoshResult.cs" />
     <Compile Include="Objects\SSOState.cs" />
     <Compile Include="Objects\NgcPrerequisiteCheck.cs" />
     <Compile Include="Objects\WorkAccount.cs" />

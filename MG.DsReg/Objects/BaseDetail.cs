@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Text.RegularExpressions;
 
 namespace MG.DsReg
 {
+    [Serializable]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public abstract class BaseDetail : IJsonOutputter
     {
         private const string REGEX_MULTI = @"^\s{0,1}\[\s{1,}(.{1,})\s{1,}UTC\s{1,}\-\-\s{1,}(.{1,})\s{1,}UTC\s{1,}\]$";
@@ -39,20 +42,25 @@ namespace MG.DsReg
             }
             return dtVal;
         }
-
-        string IJsonOutputter.ToJson(Formatting asFormat, bool includeTypes)
+        public string ToJson()
         {
             var serializer = new JsonSerializerSettings
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Include,
-                ObjectCreationHandling = ObjectCreationHandling.Replace
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                DefaultValueHandling = DefaultValueHandling.Include,
+                FloatParseHandling = FloatParseHandling.Decimal,
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Include
             };
-            if (includeTypes)
-                serializer.TypeNameHandling = TypeNameHandling.Objects;
+            serializer.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
+            serializer.Converters.Add(new VersionConverter());
+            return this.ToJson(serializer);
+        }
 
-            string jsonStr = JsonConvert.SerializeObject(this, asFormat, serializer);
-            return jsonStr;
+        public string ToJson(JsonSerializerSettings serializerSettings)
+        {
+            return JsonConvert.SerializeObject(this, serializerSettings);
         }
     }
 }
