@@ -38,10 +38,28 @@ namespace MG.DsReg
                 }
             }
         }
+        private static List<MatchDetail> MatchToKeyValuePairsAsList(string allLine, Type matchTo)
+        {
+            List<JsonMapping> mappings = JsonMapping.MappingFromType(matchTo);
+            MatchCollection matches = Regex.Matches(allLine, REGEX, RegexOptions.Multiline);
+            var finalList = new List<MatchDetail>(matches.Count);
+            foreach (Match regexMatch in matches)
+            {
+                string key = regexMatch.Groups[1].Value.Trim();
+                JsonMapping foundMapping = mappings.Find(x => x.JsonPropertyName.Equals(key, StringComparison.CurrentCultureIgnoreCase));
+                if (foundMapping != null)
+                {
+                    MatchDetail md = foundMapping.ToMatchDetail(key, regexMatch.Groups[2].Value.Trim());
+                    if (md != null)
+                        finalList.Add(md);
+                }
+            }
+            return finalList;
+        }
         private static IEnumerable<WorkAccount> MatchToWorkAccounts(string allOne, int howMany)
         {
             var list = new WorkAccountCollection(howMany);
-            var matchDets = MatchToKeyValuePairs(allOne, typeof(WorkAccount)).ToList();
+            var matchDets = MatchToKeyValuePairsAsList(allOne, typeof(WorkAccount));
             var listOfMatches = new List<MatchDetailCollection>(howMany);
 
             for (int i = 0; i < howMany; i++)
