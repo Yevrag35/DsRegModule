@@ -35,6 +35,6 @@ namespace MG.DsReg
 
         public DsRegPoshResult(DsRegResult dsRegResult) => _res = dsRegResult;
 
-        public void ToJson() => _res.ToJson();
+        public string ToJson() => _res.ToJson();
     }
 }

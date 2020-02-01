@@ -1,41 +1,25 @@
 ﻿Function Get-DsRegStatus()
 {
     [CmdletBinding(PositionalBinding=$false, DefaultParameterSetName='None')]
-    [OutputType([MG.DsReg.DsRegResult])]
+    [OutputType([MG.DsReg.DsRegPoshResult])]
     param
     (
         [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQuery')]
         [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryAsJson')]
-        [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryExpanded')]
         [string] $ComputerName,
 
         [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryPSSession')]
         [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryPSSessionAsJson')]
-        [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryPSSessionExpanded')]
         [System.Management.Automation.Runspaces.PSSession] $Session,
-
-        [parameter(Mandatory=$false)]
-        [ValidateSet("DeviceDetails", "DeviceState", "DiagnosticData", "NgcPrerequisiteCheck", "SsoState", "TenantDetails", "UserState", "WorkAccounts")]
-        [string] $Display,
 
         [parameter(Mandatory=$true, ParameterSetName='LocalQueryAsJson')]
         [parameter(Mandatory=$true, ParameterSetName='RemoteQueryAsJson')]
         [parameter(Mandatory=$true, ParameterSetName='RemoteQueryPSSessionAsJson')]
-        [switch] $AsJson,
-
-        [parameter(Mandatory=$true, ParameterSetName='LocalQueryExpanded')]
-        [parameter(Mandatory=$true, ParameterSetName='RemoteQueryExpanded')]
-        [parameter(Mandatory=$true, ParameterSetName='RemoteQueryPSSessionExpanded')]
-        [switch] $Expand
+        [switch] $AsJson
     )
     $dsArgs = @{
         AsJson = $AsJson.ToBool()
-        Expanded = $Expand.ToBool()
     };
-    if ($PSBoundParameters.ContainsKey("Display"))
-    {
-        $dsArgs.Display = $Display;
-    }
     if ($PSCmdlet.ParameterSetName.Contains("RemoteQuery"))
     {
         if ($PSBoundParameters.ContainsKey("ComputerName"))
@@ -62,42 +46,18 @@ Function Get-LocalDsRegStatus()
     param
     (
         [string] $Display,
-        [bool] $AsJson,
-        [bool] $Expanded
+        [bool] $AsJson
     )
     $executor = New-Object -TypeName "MG.DsReg.DsRegExecutor"
     $cmdResult = $executor.GetStatus();
-    if (-not [string]::IsNullOrEmpty($Display))
+    if ($AsJson)
     {
-        $object = $cmdResult.$Display;
-        if ($AsJson)
-        {
-            $object = $object.ToJson()
-        }
+        $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult);
+        $object = $object.ToJson()
     }
     else
     {
-        if ($AsJson)
-        {
-            $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult);
-            $object = $object.ToJson()
-        }
-        elseif ($Expanded)
-        {
-            $object = New-Object 'System.Collections.Generic.List[MG.DsReg.BaseDetail]'
-            $object.Add($cmdResult.DeviceDetails);
-            $object.Add($cmdResult.DeviceState);
-            $object.Add($cmdResult.DiagnosticData);
-            $object.Add($cmdResult.NgcPrerequisiteCheck);
-            $object.Add($cmdResult.SsoState);
-            $object.Add($cmdResult.TenantDetails);
-            $object.Add($cmdResult.UserState);
-            $object.AddRange($cmdResult.WorkAccounts);
-        }
-        else
-        {
-            $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult);
-        }
+        $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult);
     }
 
     , $object
@@ -125,37 +85,14 @@ Function Get-RemoteDsRegStatus()
         $details = [MG.DsReg.DsRegParser]::ParseFromText($text);
         if ($null -ne $details)
         {
-            if (-not [string]::IsNullOrEmpty($Display))
+            if ($AsJson)
             {
-                $object = $details.$Display;
-                if ($AsJson)
-                {
-                    $object = $object.ToJson("Indented", $false);
-                }
+                $object = $details;
+                $object = $object.ToJson()
             }
             else
             {
-                if ($AsJson)
-                {
-                    $object = $details;
-                    $object = $object | ConvertTo-Json -Depth 100;
-                }
-                elseif ($Expanded)
-                {
-                    $object = New-Object 'System.Collections.Generic.List[MG.DsReg.BaseDetail]'
-                    $object.Add($details.DeviceDetails);
-                    $object.Add($details.DeviceState);
-                    $object.Add($details.DiagnosticData);
-                    $object.Add($details.NgcPrerequisiteCheck);
-                    $object.Add($details.SsoState);
-                    $object.Add($details.TenantDetails);
-                    $object.Add($details.UserState);
-                    $object.AddRange($details.WorkAccounts);
-                }
-                else
-                {
-                    $object = $details;
-                }
+                $object = $details;
             }
         }
         $object
