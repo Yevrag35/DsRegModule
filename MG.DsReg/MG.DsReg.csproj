@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MG.DsReg</RootNamespace>
     <AssemblyName>MG.DsReg</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,7 +46,6 @@
     <Compile Include="Interfaces\IJsonOutputter.cs" />
     <Compile Include="JsonMapping.cs" />
     <Compile Include="Objects\BaseDetail.cs" />
-    <None Include="DsRegResultOld.cs" />
     <None Include="Interfaces\IDsRegResult.cs" />
     <Compile Include="MatchDetail.cs" />
     <Compile Include="MatchDetailCollection.cs" />
