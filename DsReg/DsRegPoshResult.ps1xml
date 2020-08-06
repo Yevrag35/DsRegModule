@@ -51,7 +51,7 @@
                                 <ScriptBlock>
                                     if ($_.DiagnosticDetails -ne $null)
                                     {
-                                        "{ KeySignTest = $($_.DiagnosticDetails.KeySignTest); AadRecoveryEnabled = $($_.DiagnosticDetails.AadRecoveryEnabled) }"
+                                        "{KeySignTest = $($_.DiagnosticDetails.KeySignTest); AadRecoveryEnabled = $($_.DiagnosticDetails.AadRecoveryEnabled)}"
                                     }
                                 </ScriptBlock>
                             </ListItem>
@@ -63,7 +63,7 @@
                                 <ScriptBlock>
                                     if ($_.NgcPrerequisiteCheck -ne $null)
                                     {
-                                        "{ CertEnrollment = $($_.NgcPrerequisiteCheck.CertEnrollment); PreReqResult = $($_.NgcPrerequisiteCheck.PreReqResult); ... }"
+                                        "{CertEnrollment = $($_.NgcPrerequisiteCheck.CertEnrollment); PreReqResult = $($_.NgcPrerequisiteCheck.PreReqResult); ...}"
                                     }
                                 </ScriptBlock>
                             </ListItem>
@@ -72,11 +72,7 @@
                                 <ScriptBlock>
                                     if ($_.SsoState -ne $null -and $_.SsoState.AzureAdPrimaryRefreshToken -ne $null)
                                     {
-                                        "{ AzureAdPrimaryRefreshToken = $($_.SsoState.AzureAdPrimaryRefreshToken); ... }"
-                                    }
-                                    else
-                                    {
-                                        "{ ... }"
+                                        "{AzureAdPrimaryRefreshToken = $($_.SsoState.AzureAdPrimaryRefreshToken); ...}"
                                     }
                                 </ScriptBlock>
                             </ListItem>

@@ -1,161 +1,116 @@
-﻿Function Get-DsRegStatus()
-{
-    [CmdletBinding(PositionalBinding=$false, DefaultParameterSetName='None')]
-    [OutputType([MG.DsReg.DsRegResult])]
+﻿Function Get-DsRegStatus() {
+    [CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = 'None')]
+	[Alias("Get-DsReg")]
+    [OutputType([MG.DsReg.DsRegPoshResult])]
     param
     (
-        [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQuery')]
-        [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryAsJson')]
-        [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryExpanded')]
+        [parameter(Mandatory = $true, Position = 0, ParameterSetName = 'RemoteQuery')]
+        [parameter(Mandatory = $true, Position = 0, ParameterSetName = 'RemoteQueryAsJson')]
         [string] $ComputerName,
 
-        [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryPSSession')]
-        [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryPSSessionAsJson')]
-        [parameter(Mandatory=$true, Position = 0, ParameterSetName='RemoteQueryPSSessionExpanded')]
+        [parameter(Mandatory = $true, Position = 0, ParameterSetName = 'RemoteQueryPSSession')]
+        [parameter(Mandatory = $true, Position = 0, ParameterSetName = 'RemoteQueryPSSessionAsJson')]
         [System.Management.Automation.Runspaces.PSSession] $Session,
 
-        [parameter(Mandatory=$false)]
-        [ValidateSet("DeviceDetails", "DeviceState", "DiagnosticData", "NgcPrerequisiteCheck", "SsoState", "TenantDetails", "UserState", "WorkAccounts")]
-        [string] $Display,
-
-        [parameter(Mandatory=$true, ParameterSetName='LocalQueryAsJson')]
-        [parameter(Mandatory=$true, ParameterSetName='RemoteQueryAsJson')]
-        [parameter(Mandatory=$true, ParameterSetName='RemoteQueryPSSessionAsJson')]
+        [parameter(Mandatory = $true, ParameterSetName = 'LocalQueryAsJson')]
+        [parameter(Mandatory = $true, ParameterSetName = 'RemoteQueryAsJson')]
+        [parameter(Mandatory = $true, ParameterSetName = 'RemoteQueryPSSessionAsJson')]
         [switch] $AsJson,
 
-        [parameter(Mandatory=$true, ParameterSetName='LocalQueryExpanded')]
-        [parameter(Mandatory=$true, ParameterSetName='RemoteQueryExpanded')]
-        [parameter(Mandatory=$true, ParameterSetName='RemoteQueryPSSessionExpanded')]
-        [switch] $Expand
+        [Parameter(Mandatory = $false, ParameterSetName='None')]
+        [Parameter(Mandatory=$false, ParameterSetName='RemoteQuery')]
+        [Parameter(Mandatory=$false, ParameterSetName='RemoteQueryPSSession')]
+        [ValidateSet("DiagnosticDetails", "NgcPrerequisiteCheck", "SsoState", "TenantDetails", "UserState", "WorkAccounts")]
+        [string[]] $Display
     )
     $dsArgs = @{
         AsJson = $AsJson.ToBool()
-        Expanded = $Expand.ToBool()
     };
-    if ($PSBoundParameters.ContainsKey("Display"))
-    {
-        $dsArgs.Display = $Display;
-    }
-    if ($PSCmdlet.ParameterSetName.Contains("RemoteQuery"))
-    {
-        if ($PSBoundParameters.ContainsKey("ComputerName"))
-        {
-            $Session = New-PSSession -ComputerName $ComputerName -ErrorAction Stop;
-            $removeAfter = $true;
+    if ($PSCmdlet.ParameterSetName.Contains("RemoteQuery")) {
+
+        if ($PSBoundParameters.ContainsKey("ComputerName")) {
+            $dsArgs.Add("ComputerName", $ComputerName)
         }
-        $status = Get-RemoteDsRegStatus -Session $Session @dsArgs;
-        if ($removeAfter)
-        {
-            $Session | Remove-PSSession;
+        elseif ($PSBoundParameters.ContainsKey("Session")) {
+            $dsArgs.Add("Session", $Session)
         }
+
+        $status = Get-RemoteDsRegStatus @dsArgs;
     }
-    else
-    {
+    else {
         $status = Get-LocalDsRegStatus @dsArgs;
     }
-    $status
+    #$status
+    if ($PSBoundParameters.ContainsKey("Display")) {
+
+        foreach ($prop in $Display) {
+            $status."$prop"
+        }
+    }
+    else {
+        $status
+    }
 }
 
-Function Get-LocalDsRegStatus()
-{
+Function Get-LocalDsRegStatus() {
     [CmdletBinding()]
     param
     (
-        [string] $Display,
-        [bool] $AsJson,
-        [bool] $Expanded
+        [bool] $AsJson
     )
     $executor = New-Object -TypeName "MG.DsReg.DsRegExecutor"
-    $cmdResult = $executor.GetStatus();
-    if (-not [string]::IsNullOrEmpty($Display))
-    {
-        $object = $cmdResult.$Display;
-        if ($AsJson)
-        {
-            $object = $object.ToJson()
-        }
-    }
-    else
-    {
-        if ($AsJson)
-        {
-            $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult);
-            $object = $object.ToJson()
-        }
-        elseif ($Expanded)
-        {
-            $object = New-Object 'System.Collections.Generic.List[MG.DsReg.BaseDetail]'
-            $object.Add($cmdResult.DeviceDetails);
-            $object.Add($cmdResult.DeviceState);
-            $object.Add($cmdResult.DiagnosticData);
-            $object.Add($cmdResult.NgcPrerequisiteCheck);
-            $object.Add($cmdResult.SsoState);
-            $object.Add($cmdResult.TenantDetails);
-            $object.Add($cmdResult.UserState);
-            $object.AddRange($cmdResult.WorkAccounts);
-        }
-        else
-        {
-            $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult);
-        }
-    }
+    $cmdResult = $executor.GetStatus()
 
-    , $object
+    if ($AsJson) {
+
+        $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult)
+        $object = $object.ToJson()
+    }
+    else {
+        $object = New-Object MG.DsReg.DsRegPoshResult($cmdResult)
+    }
+    $object
 }
 
-Function Get-RemoteDsRegStatus()
-{
+Function Get-RemoteDsRegStatus() {
     [CmdletBinding()]
     param
     (
+        [string[]] $ComputerName,
         [System.Management.Automation.Runspaces.PSSession] $Session,
-        [string] $Display = $null,
-        [bool] $AsJson,
-        [bool] $Expanded
+        [bool] $AsJson
     )
-    $psObj = Invoke-Command -Session $Session -ScriptBlock {
-        [string[]]$status = & dsregcmd.exe /status;
-        return [pscustomobject]@{
-            Text = $status
-        };
-    }
-    if ($null -ne $psObj.Text)
-    {
-        [string[]]$text = $psObj.Text;
-        $details = [MG.DsReg.DsRegParser]::ParseFromText($text);
-        if ($null -ne $details)
-        {
-            if (-not [string]::IsNullOrEmpty($Display))
-            {
-                $object = $details.$Display;
-                if ($AsJson)
-                {
-                    $object = $object.ToJson("Indented", $false);
-                }
+    $invokeArgs = @{
+        ScriptBlock = {
+            [string[]]$status = & dsregcmd.exe /status
+
+            return [pscustomobject]@{
+                Text = $status
             }
-            else
-            {
-                if ($AsJson)
-                {
-                    $object = $details;
-                    $object = $object | ConvertTo-Json -Depth 100;
-                }
-                elseif ($Expanded)
-                {
-                    $object = New-Object 'System.Collections.Generic.List[MG.DsReg.BaseDetail]'
-                    $object.Add($details.DeviceDetails);
-                    $object.Add($details.DeviceState);
-                    $object.Add($details.DiagnosticData);
-                    $object.Add($details.NgcPrerequisiteCheck);
-                    $object.Add($details.SsoState);
-                    $object.Add($details.TenantDetails);
-                    $object.Add($details.UserState);
-                    $object.AddRange($details.WorkAccounts);
-                }
-                else
-                {
-                    $object = $details;
-                }
+        }
+    }
+    if ($PSBoundParameters.ContainsKey("ComputerName")) {
+        $invokeArgs.Add("ComputerName", $ComputerName)
+    }
+    elseif ($PSBoundParameters.ContainsKey("Session")) {
+        $invokeArgs.Add("Session", $Session)
+    }
+
+    $psObj = Invoke-Command @invokeArgs
+    if ($null -ne $psObj.Text) {
+
+        [string[]]$text = $psObj.Text
+        $parsed = [MG.DsReg.DsRegParser]::ParseFromText($text)
+        $details = New-Object MG.DsReg.DsRegPoshResult($parsed)
+
+        if ($null -ne $details) {
+
+            if ($AsJson) {
+                $object = $details;
+                $object = $object.ToJson()
+            }
+            else {
+                $object = $details
             }
         }
         $object
