@@ -14,10 +14,10 @@ namespace MG.DsReg
         public Guid? DeviceId { get; private set; }
 
         [JsonIgnore]
-        public DateTime? DeviceCertificateValidityStart => base.ConvertTime(this.deviceCertificateValidity, 1);
+        public DateTimeOffset? DeviceCertificateValidityStart => base.ConvertTime(this.deviceCertificateValidity, 1);
 
         [JsonIgnore]
-        public DateTime? DeviceCertificateValidityEnd => base.ConvertTime(this.deviceCertificateValidity, 2);
+        public DateTimeOffset? DeviceCertificateValidityEnd => base.ConvertTime(this.deviceCertificateValidity, 2);
 
         [JsonProperty("keyContainerId")]
         public Guid? KeyContainerId { get; set; }

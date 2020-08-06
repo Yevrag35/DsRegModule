@@ -20,10 +20,10 @@ namespace MG.DsReg
         public string AzureAdPrimaryRefreshTokenAuthority { get; set; }
 
         [JsonIgnore]
-        public DateTime? AzureAdPrimaryRefreshTokenExpiryTime => base.ConvertTime(azureadprtExpiryTime);
+        public DateTimeOffset? AzureAdPrimaryRefreshTokenExpiryTime => base.ConvertTime(azureadprtExpiryTime);
 
         [JsonIgnore]
-        public DateTime? AzureAdPrimaryRefreshTokenUpdateTime => base.ConvertTime(azureAdPrtUpdateTime);
+        public DateTimeOffset? AzureAdPrimaryRefreshTokenUpdateTime => base.ConvertTime(azureAdPrtUpdateTime);
 
         [JsonProperty("enterprisePrt")]
         public bool? EnterprisePrimaryRefreshToken { get; set; }

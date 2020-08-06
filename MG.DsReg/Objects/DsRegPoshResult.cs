@@ -16,8 +16,8 @@ namespace MG.DsReg
         public string AzureTenantName => _res.TenantDetails.TenantName;
         public bool AzureADJoined => _res.DeviceState.AzureADJoined;
         public string DeviceCertificateThumbprint => _res.DeviceDetails.Thumbprint;
-        public DateTime? DeviceCertificateValidityEnd => _res.DeviceDetails.DeviceCertificateValidityEnd;
-        public DateTime? DeviceCertificateValidityStart => _res.DeviceDetails.DeviceCertificateValidityStart;
+        public DateTimeOffset? DeviceCertificateValidityEnd => _res.DeviceDetails.DeviceCertificateValidityEnd;
+        public DateTimeOffset? DeviceCertificateValidityStart => _res.DeviceDetails.DeviceCertificateValidityStart;
         public Guid? DeviceId => _res.DeviceDetails.DeviceId;
         public bool DeviceTpmProtected => _res.DeviceDetails.TpmProtected.HasValue && _res.DeviceDetails.TpmProtected.Value;
         public DiagnosticData DiagnosticDetails => _res.DiagnosticData;
