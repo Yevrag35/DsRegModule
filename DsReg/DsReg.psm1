@@ -1,5 +1,6 @@
 ﻿Function Get-DsRegStatus() {
     [CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = 'None')]
+	[Alias("Get-DsReg")]
     [OutputType([MG.DsReg.DsRegPoshResult])]
     param
     (
