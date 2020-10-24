@@ -4,27 +4,57 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace MG.DsReg
 {
     [Serializable]
-    public class WorkAccountCollection : IEnumerable<WorkAccount>, IJsonOutputter
+    public class WorkAccountCollection : IReadOnlyList<WorkAccount>, IJsonOutputter
     {
-        private List<WorkAccount> _list;
+        private SortedList<string, WorkAccount> _list;
 
-        public WorkAccount this[int index] => _list[index];
+        public WorkAccount this[string tenantName] => _list[tenantName];
+        public WorkAccount this[int index]
+        {
+            get
+            {
+                if (index >= 0)
+                    return _list.Values[index];
+
+                else
+                {
+                    int goHere = _list.Count + index;
+                    return goHere >= 0 ? _list.Values[goHere] : null;
+                }
+            }
+        }
 
         public int Count => _list.Count;
 
-        public WorkAccountCollection() => _list = new List<WorkAccount>();
-        public WorkAccountCollection(int capacity) => _list = new List<WorkAccount>(capacity);
+        public WorkAccountCollection()
+        {
+            _list = new SortedList<string, WorkAccount>(StringComparer.CurrentCultureIgnoreCase);
+        }
+        public WorkAccountCollection(int capacity)
+        {
+            _list = new SortedList<string, WorkAccount>(capacity, StringComparer.CurrentCultureIgnoreCase);
+        }
 
-        internal void Add(WorkAccount wa) => _list.Add(wa);
+        internal void Add(WorkAccount wa)
+        {
+            if (_list.ContainsKey(wa.WorkplaceTenantName))
+                return;
 
-        public IEnumerator<WorkAccount> GetEnumerator() => ((IEnumerable<WorkAccount>)_list).GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<WorkAccount>)_list).GetEnumerator();
+            _list.Add(wa.WorkplaceTenantName, wa);
+        }
+
+        public IEnumerator<WorkAccount> GetEnumerator()
+        {
+            return _list.Values.GetEnumerator();
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
 
         public string ToJson()
         {
@@ -40,10 +70,9 @@ namespace MG.DsReg
             serializer.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
             return this.ToJson(serializer);
         }
-
         public string ToJson(JsonSerializerSettings serializerSettings)
         {
-            return JsonConvert.SerializeObject(this, serializerSettings);
+            return JsonConvert.SerializeObject(_list.Values, serializerSettings);
         }
     }
 }

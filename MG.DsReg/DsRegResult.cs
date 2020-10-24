@@ -44,7 +44,13 @@ namespace MG.DsReg
         #region CONSTRUCTORS
         public DsRegResult(IEnumerable<string> allLines)
         {
-            if (allLines is string[] strArr)
+            if (allLines is ICollection<string> lineCol)
+            {
+                _dsRegLines = new string[lineCol.Count];
+                lineCol.CopyTo(_dsRegLines, 0);
+            }
+
+            else if (allLines is string[] strArr)
                 _dsRegLines = strArr;
 
             else
