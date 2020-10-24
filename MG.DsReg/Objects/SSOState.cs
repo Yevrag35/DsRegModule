@@ -7,10 +7,10 @@ namespace MG.DsReg
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class SSOState : BaseDetail
     {
-        [JsonProperty("azureAdPrtUpdateTime")]
+        //[JsonProperty("azureAdPrtUpdateTime")]
         internal string azureAdPrtUpdateTime { get; set; }
 
-        [JsonProperty("azureadprtExpiryTime")]
+        //[JsonProperty("azureadprtExpiryTime")]
         internal string azureadprtExpiryTime { get; set; }
 
         [JsonProperty("azureAdPrt")]
@@ -19,11 +19,13 @@ namespace MG.DsReg
         [JsonProperty("azureAdPrtAuthority")]
         public string AzureAdPrimaryRefreshTokenAuthority { get; set; }
 
-        [JsonIgnore]
-        public DateTimeOffset? AzureAdPrimaryRefreshTokenExpiryTime => base.ConvertTime(azureadprtExpiryTime);
+        //[JsonIgnore]
+        [JsonProperty("azureadprtExpiryTime")]
+        public DateTimeOffset? AzureAdPrimaryRefreshTokenExpiryTime { get; set; }// => base.ConvertTime(azureadprtExpiryTime);
 
-        [JsonIgnore]
-        public DateTimeOffset? AzureAdPrimaryRefreshTokenUpdateTime => base.ConvertTime(azureAdPrtUpdateTime);
+        //[JsonIgnore]
+        [JsonProperty("azureAdPrtUpdateTime")]
+        public DateTimeOffset? AzureAdPrimaryRefreshTokenUpdateTime { get; set; }//=> base.ConvertTime(azureAdPrtUpdateTime);
 
         [JsonProperty("enterprisePrt")]
         public bool? EnterprisePrimaryRefreshToken { get; set; }
@@ -31,6 +33,16 @@ namespace MG.DsReg
         [JsonProperty("enterprisePrtAuthority")]
         public string EnterprisePrimaryRefreshTokenAuthority { get; set; }
 
-        public SSOState() { }
+        [JsonConstructor]
+        public SSOState()
+            : base(6)
+        {
+            base.AddSetter(this, x => x.AzureAdPrimaryRefreshToken, x => this.AzureAdPrimaryRefreshToken = base.ConvertToBool(x));
+            base.AddSetter(this, x => x.AzureAdPrimaryRefreshTokenAuthority, x => this.AzureAdPrimaryRefreshTokenAuthority = x);
+            base.AddSetter(this, x => x.AzureAdPrimaryRefreshTokenExpiryTime, x => this.AzureAdPrimaryRefreshTokenExpiryTime = base.ConvertTime(x));
+            base.AddSetter(this, x => x.AzureAdPrimaryRefreshTokenUpdateTime, x => this.AzureAdPrimaryRefreshTokenUpdateTime = base.ConvertTime(x));
+            base.AddSetter(this, x => x.EnterprisePrimaryRefreshToken, x => this.EnterprisePrimaryRefreshToken = base.ConvertToBool(x));
+            base.AddSetter(this, x => x.EnterprisePrimaryRefreshTokenAuthority, x => this.EnterprisePrimaryRefreshTokenAuthority = x);
+        }
     }
 }
