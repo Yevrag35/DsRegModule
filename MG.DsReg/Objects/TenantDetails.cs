@@ -70,6 +70,11 @@ namespace MG.DsReg
         [JsonProperty("webAuthNSrvId")]
         public string WebAuthNSrvId { get; set; }
 
-        public TenantDetails() { }
+        [JsonConstructor]
+        public TenantDetails()
+            : base(21)
+        {
+
+        }
     }
 }
