@@ -21,12 +21,13 @@ namespace MG.DsReg
 
         protected Dictionary<string, Action<string>> Setters { get; }
 
-        public BaseDetail()
+        public BaseDetail(int capacity)
         {
-            this.Setters = new Dictionary<string, Action<string>>(StringComparer.CurrentCultureIgnoreCase);
+            this.Setters = new Dictionary<string, Action<string>>(capacity, StringComparer.CurrentCultureIgnoreCase);
         }
 
         protected void AddSetter<TClass, TProp>(TClass obj, Expression<Func<TClass, TProp>> expression, Action<string> action)
+            where TClass : BaseDetail
         {
             if (TryGetInfoFromExpression(expression, out MemberExpression memEx))
             {
@@ -39,6 +40,15 @@ namespace MG.DsReg
 
         }
 
+        protected Guid? ConvertGuid(string guid)
+        {
+            Guid? maybe = null;
+            if (Guid.TryParse(guid, out Guid gotcha))
+            {
+                maybe = gotcha;
+            }
+            return maybe;
+        }
         protected private DateTimeOffset? ConvertTime(string input, int groupNo)
         {
             if (string.IsNullOrEmpty(input))
@@ -55,7 +65,6 @@ namespace MG.DsReg
             }
             return dtVal;
         }
-
         protected private DateTimeOffset? ConvertTime(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -157,8 +166,11 @@ namespace MG.DsReg
                 this.Setters[kvp.Item1](kvp.Item2);
             }
         }
-        protected bool ConvertToBool(string yesNo)
+        protected bool? ConvertToBool(string yesNo)
         {
+            if (string.IsNullOrWhiteSpace(yesNo))
+                return null;
+
             if (yesNo.IndexOf("YES", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return true;

@@ -24,12 +24,12 @@ namespace MG.DsReg
 
         [JsonConstructor]
         public DeviceState()
-            : base()
+            : base(4)
         {
-            base.AddSetter(this, x => x.AzureADJoined, x => this.AzureADJoined = base.ConvertToBool(x));
-            base.AddSetter(this, x => x.DomainJoined, x => this.DomainJoined = base.ConvertToBool(x));
+            base.AddSetter(this, x => x.AzureADJoined, x => this.AzureADJoined = base.ConvertToBool(x).GetValueOrDefault());
+            base.AddSetter(this, x => x.DomainJoined, x => this.DomainJoined = base.ConvertToBool(x).GetValueOrDefault());
             base.AddSetter(this, x => x.DomainName, x => this.DomainName = x);
-            base.AddSetter(this, x => x.EnterpriseJoined, x => this.EnterpriseJoined = base.ConvertToBool(x));
+            base.AddSetter(this, x => x.EnterpriseJoined, x => this.EnterpriseJoined = base.ConvertToBool(x).GetValueOrDefault());
         }
     }
 }

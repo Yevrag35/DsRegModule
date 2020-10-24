@@ -30,9 +30,13 @@ namespace MG.DsReg
 
         [JsonConstructor]
         public DeviceDetails()
-            : base()
+            : base(5)
         {
-
+            base.AddSetter(this, x => x._deviceCertificateValidity, x => _deviceCertificateValidity = x);
+            base.AddSetter(this, x => x.DeviceId, x => base.ConvertGuid(x));
+            base.AddSetter(this, x => x.KeyContainerId, x => base.ConvertGuid(x));
+            base.AddSetter(this, x => x.Thumbprint, x => this.Thumbprint = x);
+            base.AddSetter(this, x => x.TpmProtected, x => this.TpmProtected = base.ConvertToBool(x));
         }
     }
 }
