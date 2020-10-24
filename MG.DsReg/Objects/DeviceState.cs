@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace MG.DsReg
 {
@@ -7,6 +9,7 @@ namespace MG.DsReg
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class DeviceState : BaseDetail
     {
+
         [JsonProperty("azureADJoined")]
         public bool AzureADJoined { get; set; }
 
@@ -19,6 +22,14 @@ namespace MG.DsReg
         [JsonProperty("enterpriseJoined")]
         public bool EnterpriseJoined { get; set; }
 
-        public DeviceState() { }
+        [JsonConstructor]
+        public DeviceState()
+            : base()
+        {
+            base.AddSetter(this, x => x.AzureADJoined, x => this.AzureADJoined = base.ConvertToBool(x));
+            base.AddSetter(this, x => x.DomainJoined, x => this.DomainJoined = base.ConvertToBool(x));
+            base.AddSetter(this, x => x.DomainName, x => this.DomainName = x);
+            base.AddSetter(this, x => x.EnterpriseJoined, x => this.EnterpriseJoined = base.ConvertToBool(x));
+        }
     }
 }

@@ -8,16 +8,16 @@ namespace MG.DsReg
     public class DeviceDetails : BaseDetail
     {
         [JsonProperty("deviceCertificateValidity")]
-        internal string deviceCertificateValidity { get; set; }
+        internal string _deviceCertificateValidity { get; set; }
 
         [JsonProperty("deviceId")]
         public Guid? DeviceId { get; private set; }
 
         [JsonIgnore]
-        public DateTimeOffset? DeviceCertificateValidityStart => base.ConvertTime(this.deviceCertificateValidity, 1);
+        public DateTimeOffset? DeviceCertificateValidityStart => base.ConvertTime(this._deviceCertificateValidity, 1);
 
         [JsonIgnore]
-        public DateTimeOffset? DeviceCertificateValidityEnd => base.ConvertTime(this.deviceCertificateValidity, 2);
+        public DateTimeOffset? DeviceCertificateValidityEnd => base.ConvertTime(this._deviceCertificateValidity, 2);
 
         [JsonProperty("keyContainerId")]
         public Guid? KeyContainerId { get; set; }
@@ -28,6 +28,11 @@ namespace MG.DsReg
         [JsonProperty("tpmProtected")]
         public bool? TpmProtected { get; set; }
 
-        public DeviceDetails() { }
+        [JsonConstructor]
+        public DeviceDetails()
+            : base()
+        {
+
+        }
     }
 }

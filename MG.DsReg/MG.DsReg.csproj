@@ -49,8 +49,9 @@
     <Compile Include="DsRegResult.cs" />
     <Compile Include="Interfaces\IJsonOutputter.cs" />
     <Compile Include="JsonMapping.cs" />
-    <Compile Include="NewStuff\Header.cs" />
+    <Compile Include="NewStuff\Section.cs" />
     <Compile Include="Objects\BaseDetail.cs" />
+    <None Include="NewStuff\SectionBuilder.cs" />
     <None Include="Interfaces\IDsRegResult.cs" />
     <Compile Include="MatchDetail.cs" />
     <Compile Include="MatchDetailCollection.cs" />
