@@ -45,10 +45,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DsRegParser2.cs" />
+    <Compile Include="NewStuff\DsRegParser2.cs" />
     <Compile Include="DsRegResult.cs" />
     <Compile Include="Interfaces\IJsonOutputter.cs" />
     <Compile Include="JsonMapping.cs" />
+    <Compile Include="NewStuff\Header.cs" />
     <Compile Include="Objects\BaseDetail.cs" />
     <None Include="Interfaces\IDsRegResult.cs" />
     <Compile Include="MatchDetail.cs" />
