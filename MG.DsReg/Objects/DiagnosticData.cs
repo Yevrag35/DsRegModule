@@ -13,6 +13,12 @@ namespace MG.DsReg
         [JsonProperty("keySignTest")]
         public string KeySignTest { get; set; }
 
-        public DiagnosticData() { }
+        [JsonConstructor]
+        public DiagnosticData()
+            : base(2)
+        {
+            base.AddSetter(this, x => x.AadRecoveryEnabled, x => this.AadRecoveryEnabled = ConvertToBool(x));
+            base.AddSetter(this, x => x.KeySignTest, x => this.KeySignTest = x);
+        }
     }
 }
