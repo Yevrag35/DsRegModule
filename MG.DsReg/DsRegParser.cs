@@ -15,18 +15,17 @@ namespace MG.DsReg
         private static IgnoreCase IC = new IgnoreCase();
 
         
-        private static BaseDetail MatchTo(BaseDetail newObj, string allLine)
+        private static BaseDetail MatchTo(BaseDetail newObj, MatchCollection matches)
         {
-            foreach (MatchDetail md in MatchToKeyValuePairs(allLine, newObj.GetType()))
+            foreach (MatchDetail md in MatchToKeyValuePairs(matches, newObj.GetType()))
             {
                 md.SetValue(newObj);
             }
             return newObj;
         }
-        private static IEnumerable<MatchDetail> MatchToKeyValuePairs(string allLine, Type matchTo)
+        private static IEnumerable<MatchDetail> MatchToKeyValuePairs(MatchCollection matches, Type matchTo)
         {
             List<JsonMapping> mappings = JsonMapping.MappingFromType(matchTo);
-            MatchCollection matches = Regex.Matches(allLine, REGEX, RegexOptions.Multiline);
 
             foreach (Match regexMatch in matches)
             {
@@ -38,10 +37,10 @@ namespace MG.DsReg
                 }
             }
         }
-        private static List<MatchDetail> MatchToKeyValuePairsAsList(string allLine, Type matchTo)
+        private static List<MatchDetail> MatchToKeyValuePairsAsList(MatchCollection matches, Type matchTo)
         {
             List<JsonMapping> mappings = JsonMapping.MappingFromType(matchTo);
-            MatchCollection matches = Regex.Matches(allLine, REGEX, RegexOptions.Multiline);
+            
             var finalList = new List<MatchDetail>(matches.Count);
             foreach (Match regexMatch in matches)
             {
@@ -56,10 +55,10 @@ namespace MG.DsReg
             }
             return finalList;
         }
-        private static IEnumerable<WorkAccount> MatchToWorkAccounts(string allOne, int howMany)
+        private static IEnumerable<WorkAccount> MatchToWorkAccounts(MatchCollection matchCollection, int howMany)
         {
             var list = new WorkAccountCollection(howMany);
-            var matchDets = MatchToKeyValuePairsAsList(allOne, typeof(WorkAccount));
+            var matchDets = MatchToKeyValuePairsAsList(matchCollection, typeof(WorkAccount));
             var listOfMatches = new List<MatchDetailCollection>(howMany);
 
             for (int i = 0; i < howMany; i++)
@@ -85,37 +84,43 @@ namespace MG.DsReg
             IEnumerable<string> classes = ParseIntoClasses(allLines);
             string allOne = string.Join(Environment.NewLine, allLines);
 
-            return ParseFromNotWA(classes, allOne);   
+            return ParseFromNotWA(classes, allOne);
         }
 
         private static IEnumerable<BaseDetail> ParseFromNotWA(IEnumerable<string> classes, string allOne)
         {
-            foreach (string s in classes)
+            MatchCollection matches = Regex.Matches(allOne, REGEX, RegexOptions.Multiline | RegexOptions.Compiled);
+            foreach (string cls in classes)
             {
-                if (!s.Contains("WorkAccount"))
-                {
-                    var t = Type.GetType(string.Format("MG.DsReg.{0}", s));
-                    if (t != null)
-                    {
-                        var newObj = Activator.CreateInstance(t) as BaseDetail;
-                        yield return MatchTo(newObj, allOne);
-                    }
-                }
-                else
-                {
-                    int count = classes.Count(x => x.Contains("WorkAccount"));
-                    foreach (BaseDetail bd in MatchToWorkAccounts(allOne, count))
-                    {
-                        yield return bd;
-                    }
-                }
+
             }
+
+            //foreach (string s in classes)
+            //{
+            //    if (!s.Contains("WorkAccount"))
+            //    {
+            //        var t = Type.GetType(string.Format("MG.DsReg.{0}", s));
+            //        if (t != null)
+            //        {
+            //            var newObj = Activator.CreateInstance(t) as BaseDetail;
+            //            yield return MatchTo(newObj, allOne);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        int count = classes.Count(x => x.Contains("WorkAccount"));
+            //        foreach (BaseDetail bd in MatchToWorkAccounts(allOne, count))
+            //        {
+            //            yield return bd;
+            //        }
+            //    }
+            //}
         }
         public static DsRegResult ParseFromText(IEnumerable<string> allLines) => new DsRegResult(allLines);
         internal static IEnumerable<string> ParseIntoClasses(IEnumerable<string> lines)
         {
             string allOne = string.Join(Environment.NewLine, lines);
-            MatchCollection matchCol = Regex.Matches(allOne, CLASS_REGEX, RegexOptions.Multiline);
+            MatchCollection matchCol = Regex.Matches(allOne, CLASS_REGEX, RegexOptions.Multiline | RegexOptions.Compiled);
             foreach (Match m in matchCol)
             {
                 yield return (m.Groups[1].Value as string).Replace(" ", string.Empty);

@@ -10,6 +10,9 @@ namespace MG.DsReg
         [JsonProperty("azureADJoined")]
         public bool AzureADJoined { get; set; }
 
+        [JsonProperty("deviceName")]
+        public string DeviceName { get; set; }
+
         [JsonProperty("domainJoined")]
         public bool DomainJoined { get; set; }
 
