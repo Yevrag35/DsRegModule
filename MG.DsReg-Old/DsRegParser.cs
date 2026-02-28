@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace MG.DsReg
@@ -14,7 +11,7 @@ namespace MG.DsReg
         private const string CLASS_REGEX = @"^\|\s{1,}(\S{1,}\s\S{1,}(?:\s\S{1,}|\s))";
         private static IgnoreCase IC = new IgnoreCase();
 
-        
+
         private static BaseDetail MatchTo(BaseDetail newObj, string allLine)
         {
             foreach (MatchDetail md in MatchToKeyValuePairs(allLine, newObj.GetType()))
@@ -85,7 +82,7 @@ namespace MG.DsReg
             IEnumerable<string> classes = ParseIntoClasses(allLines);
             string allOne = string.Join(Environment.NewLine, allLines);
 
-            return ParseFromNotWA(classes, allOne);   
+            return ParseFromNotWA(classes, allOne);
         }
 
         private static IEnumerable<BaseDetail> ParseFromNotWA(IEnumerable<string> classes, string allOne)

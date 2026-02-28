@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace MG.DsReg
 {
@@ -13,7 +11,7 @@ namespace MG.DsReg
 
         public string DsRegExe { get; }
 
-        public DsRegExecutor() => DsRegExe = this.GetExePath();
+        public DsRegExecutor() => this.DsRegExe = this.GetExePath();
 
         private string GetExePath()
         {

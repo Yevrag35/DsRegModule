@@ -4,10 +4,8 @@
     <TargetFrameworks>net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<RootNamespace>MG.DsReg</RootNamespace>
+	<AssemblyName>MG.DsReg</AssemblyName>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Tokenization\" />
-  </ItemGroup>
 
 </Project>

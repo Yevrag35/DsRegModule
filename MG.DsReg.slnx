@@ -2,6 +2,9 @@
   <Folder Name="/Legacy/">
     <Project Path="MG.DsReg-Old/MG.DsReg-Old.csproj" Id="74436d80-8c83-4581-9435-f5e91310e81e" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
   <Project Path="MG.DsReg.Next-NETFramework/MG.DsReg.Next-NETFramework.csproj" Id="062332d6-bedf-4a48-b86c-9090358f3541" />
   <Project Path="MG.DsReg.Next/MG.DsReg.Next.csproj" />
 </Solution>

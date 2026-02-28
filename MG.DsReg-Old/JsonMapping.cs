@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -20,7 +19,7 @@ namespace MG.DsReg
                 this.JsonPropertyName = foundAttribute.PropertyName;
 
             else
-                this.JsonPropertyName = propertyInfo.Name;   
+                this.JsonPropertyName = propertyInfo.Name;
         }
 
         internal MatchDetail ToMatchDetail(Match regexMatch)

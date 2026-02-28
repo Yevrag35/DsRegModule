@@ -30,7 +30,7 @@ namespace MG.DsReg
 
         [JsonProperty("sessionIsNotRemote")]
         public bool? SessionIsNotRemote { get; set; }
-        
+
         public NgcPrerequisiteCheck() { }
     }
 }
